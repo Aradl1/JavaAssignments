@@ -1,6 +1,5 @@
 //Austin Radloff 
 //p.29 Aug. 31
-package ch1;
 import javax.swing.JOptionPane;
 
 public class HelloDialoge {
