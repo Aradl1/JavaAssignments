@@ -2,7 +2,8 @@
     "java.project.sourcePaths": [
         "ch2_ex8",
         "ch2",
+        "ch1-ex7",
         "ch1",
-        "ch1-ex7"
+        "ch3/ch3YouDoIt"
     ]
 }

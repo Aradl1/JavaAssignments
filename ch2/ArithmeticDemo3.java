@@ -1,8 +1,9 @@
+
 //Austin Radloff
 //p.71 Aug. 31
 import java.util.Scanner;
 
-public class ArithmeticDemo
+public class ArithmeticDemo3
 {
     public static void main(String[] args)
     {
@@ -10,22 +11,23 @@ public class ArithmeticDemo
         int secondNumber;
         int sum;
         int difference;
-        int average;
+        double average;
 
         Scanner input = new Scanner(System.in);
 
-        System.out.print("Enter first integer: ");
+        System.out.print("Enter an integer >> ");
         firstNumber = input.nextInt();
 
-        System.out.print("Enter second integer: ");
+        System.out.print("Enter another integer >> ");
         secondNumber = input.nextInt();
 
         sum = firstNumber + secondNumber;
         difference = firstNumber - secondNumber;
-        average = (firstNumber + secondNumber) / 2;
 
-        System.out.println("Sum is " + sum);
-        System.out.println("Difference is " + difference);
-        System.out.println("Average is " + average);
+        average = (double) sum / 2;
+
+        System.out.println("The sum is " + sum);
+        System.out.println("The difference is " + difference);
+        System.out.println("The average is " + average);
     }
 }
