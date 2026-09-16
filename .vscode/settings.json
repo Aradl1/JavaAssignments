@@ -1,5 +1,6 @@
 {
     "java.project.sourcePaths": [
+        "ch6/ch6 youdoit",
         "ch4/ch4youdoit",
         "ch4/ch4 ex1",
         "ch3/ch3YouDoIt",
@@ -7,7 +8,7 @@
         "ch2",
         "ch1-ex7",
         "ch1",
-        "ch6/ch6 youdoit"
+        "ch7/ch7 youdoit"
     ],
     "java.debug.settings.onBuildFailureProceed": true
 }
