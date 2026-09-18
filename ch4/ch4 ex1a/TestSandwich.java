@@ -1,6 +1,6 @@
+
 //Austin Radloff
 //p 156
-
 import java.util.Scanner;
 
 public class TestSandwich {
@@ -19,8 +19,11 @@ public class TestSandwich {
         sandwich.setPrice(input.nextDouble());
 
         System.out.println();
+        System.out.println("Sandwich Details");
         System.out.println("Main ingredient: " + sandwich.getMainIngredient());
         System.out.println("Bread type: " + sandwich.getBreadType());
         System.out.println("Price: $" + sandwich.getPrice());
+
+        input.close();
     }
 }
