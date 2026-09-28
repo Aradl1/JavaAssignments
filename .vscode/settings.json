@@ -9,7 +9,8 @@
         "ch2",
         "ch1-ex7",
         "ch1",
-        "Ch8YouDoIt"
+        "Ch8YouDoIt",
+        "Ch9YouDoIt"
     ],
     "java.debug.settings.onBuildFailureProceed": true
 }
