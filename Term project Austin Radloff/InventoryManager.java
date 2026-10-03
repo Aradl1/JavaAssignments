@@ -30,6 +30,55 @@ public class InventoryManager {
         return null;
     }
 
+    public boolean updateQuantity(int id, int newQuantity) {
+        InventoryItem item = searchByID(id);
+
+        if (item != null) {
+            item.setQuantity(newQuantity);
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean updatePrice(int id, double newPrice) {
+        InventoryItem item = searchByID(id);
+
+        if (item != null) {
+            item.setPrice(newPrice);
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean removeItem(int id) {
+        for (int x = 0; x < itemCount; x++) {
+            if (items[x].getItemID() == id) {
+                for (int y = x; y < itemCount - 1; y++) {
+                    items[y] = items[y + 1];
+                }
+
+                items[itemCount - 1] = null;
+                itemCount--;
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public double getTotalInventoryValue() {
+        double total = 0;
+
+        for (int x = 0; x < itemCount; x++) {
+            total = total + items[x].getInventoryValue();
+        }
+
+        return total;
+    }
+
     public void displayInventory() {
         System.out.println("COMPUTER REPAIR SHOP INVENTORY");
         System.out.println("--------------------------------");
@@ -60,5 +109,8 @@ public class InventoryManager {
 
             System.out.println();
         }
+
+        System.out.println("Total Inventory Value: $" +
+                getTotalInventoryValue());
     }
 }
