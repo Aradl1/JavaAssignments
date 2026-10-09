@@ -1,5 +1,8 @@
 //Austin Radloff
 
+import java.io.*;
+import java.nio.file.*;
+
 public class InventoryManager {
     private InventoryItem[] items;
     private int itemCount;
@@ -112,5 +115,82 @@ public class InventoryManager {
 
         System.out.println("Total Inventory Value: $" +
                 getTotalInventoryValue());
+    }
+
+    public void saveInventoryToFile() {
+        try {
+            BufferedWriter writer = Files.newBufferedWriter(
+                    Paths.get("inventory.txt"));
+
+            for (int x = 0; x < itemCount; x++) {
+                writer.write(
+                        items[x].getItemID() + "," +
+                                items[x].getPartName() + "," +
+                                items[x].getCategory() + "," +
+                                items[x].getQuantity() + "," +
+                                items[x].getPrice() + "," +
+                                items[x].getReorderLevel());
+
+                writer.newLine();
+            }
+
+            writer.close();
+
+            System.out.println(
+                    "Inventory saved to file.");
+        } catch (IOException e) {
+            System.out.println(
+                    "Error saving inventory file.");
+        }
+    }
+
+    public void loadInventoryFromFile() {
+        itemCount = 0;
+
+        try {
+            BufferedReader reader = Files.newBufferedReader(
+                    Paths.get("inventory.txt"));
+
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                String[] data = line.split(",");
+
+                int id = Integer.parseInt(data[0]);
+
+                String name = data[1];
+
+                String category = data[2];
+
+                int quantity = Integer.parseInt(data[3]);
+
+                double price = Double.parseDouble(data[4]);
+
+                int reorder = Integer.parseInt(data[5]);
+
+                InventoryItem item = new InventoryItem(
+                        id,
+                        name,
+                        category,
+                        quantity,
+                        price,
+                        reorder);
+
+                addItem(item);
+            }
+
+            reader.close();
+
+            System.out.println(
+                    "Inventory loaded from file.");
+
+        } catch (IOException e) {
+            System.out.println(
+                    "Inventory file could not be loaded.");
+
+        } catch (NumberFormatException e) {
+            System.out.println(
+                    "Inventory file contains invalid data.");
+        }
     }
 }
