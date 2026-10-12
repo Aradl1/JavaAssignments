@@ -1,5 +1,6 @@
 {
     "java.project.sourcePaths": [
+        "ch9 exercise 8",
         "ch7/ch7 youdoit",
         "ch6/ch6 youdoit",
         "ch4/ch4youdoit",
@@ -9,13 +10,14 @@
         "ch2_ex8",
         "ch2",
         "ch14",
+        "ch13 YouDoIt",
         "ch1-ex7",
         "ch1",
         "ch 11",
         "Term project Austin Radloff",
         "Ch9 YouDoIt 2nd half",
         "Ch8YouDoIt",
-        "ch9 exercise 8"
+        "ch12"
     ],
     "java.debug.settings.onBuildFailureProceed": true
 }
