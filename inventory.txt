@@ -1,0 +1,20 @@
+101,RAM 16GB,Memory,10,49.99,3
+102,1TB SSD,Storage,8,79.99,2
+103,650W Power Supply,Power,4,89.99,2
+104,Wireless Mouse,Accessories,12,24.99,4
+105,Mechanical Keyboard,Accessories,7,59.99,3
+106,HDMI Cable,Cables,15,12.99,5
+107,USB-C Cable,Cables,18,9.99,5
+108,CPU Cooler,Cooling,5,39.99,2
+109,120mm Case Fan,Cooling,3,14.99,3
+110,ATX Motherboard,Motherboards,4,129.99,2
+111,Graphics Card,Graphics,2,349.99,2
+112,WiFi Adapter,Networking,6,29.99,2
+113,Ethernet Cable,Networking,14,8.99,4
+114,Laptop Charger,Power,3,44.99,3
+115,Thermal Paste,Cooling,9,7.99,3
+116,SATA Cable,Cables,11,6.99,4
+117,2TB Hard Drive,Storage,5,69.99,2
+118,32GB RAM Kit,Memory,2,89.99,3
+119,Webcam,Accessories,6,34.99,2
+120,USB Hub,Accessories,4,19.99,4
