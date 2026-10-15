@@ -1,4 +1,9 @@
-//Austin Radloff
+/*Austin Radloff
+ * This class manages the inventory.
+ * It uses an array to store items and contains methods
+ * for adding, searching, updating, removing, saving,
+ * loading, and displaying inventory information.
+ */
 
 import java.io.*;
 import java.nio.file.*;
@@ -7,17 +12,23 @@ public class InventoryManager {
 
     private InventoryItem[] items;
     private int itemCount;
+
     private final int MAX_ITEMS = 20;
 
-    // Relative file path
-    private final Path inventoryFile = Paths.get("inventory.txt");
+    // Relative path used for the inventory data file.
+    private final String FILE_NAME = "inventory.txt";
 
     public InventoryManager() {
         items = new InventoryItem[MAX_ITEMS];
         itemCount = 0;
     }
 
+    // Adds an item if there is room and the ID is not already used.
     public boolean addItem(InventoryItem item) {
+
+        if (searchByID(item.getItemID()) != null) {
+            return false;
+        }
 
         if (itemCount < MAX_ITEMS) {
             items[itemCount] = item;
@@ -28,6 +39,7 @@ public class InventoryManager {
         return false;
     }
 
+    // Searches the inventory array for an item ID.
     public InventoryItem searchByID(int id) {
 
         for (int x = 0; x < itemCount; x++) {
@@ -40,6 +52,7 @@ public class InventoryManager {
         return null;
     }
 
+    // Updates the quantity for an existing inventory item.
     public boolean updateQuantity(int id, int newQuantity) {
 
         InventoryItem item = searchByID(id);
@@ -52,6 +65,7 @@ public class InventoryManager {
         return false;
     }
 
+    // Updates the price for an existing inventory item.
     public boolean updatePrice(int id, double newPrice) {
 
         InventoryItem item = searchByID(id);
@@ -64,6 +78,7 @@ public class InventoryManager {
         return false;
     }
 
+    // Removes an item and shifts remaining array elements.
     public boolean removeItem(int id) {
 
         for (int x = 0; x < itemCount; x++) {
@@ -84,12 +99,13 @@ public class InventoryManager {
         return false;
     }
 
+    // Calculates the value of all inventory currently stored.
     public double getTotalInventoryValue() {
 
         double total = 0;
 
         for (int x = 0; x < itemCount; x++) {
-            total += items[x].getInventoryValue();
+            total = total + items[x].getInventoryValue();
         }
 
         return total;
@@ -99,176 +115,266 @@ public class InventoryManager {
         return itemCount;
     }
 
+    // Returns an item at a specific array location.
     public InventoryItem getItem(int index) {
-        return items[index];
+
+        if (index >= 0 && index < itemCount) {
+            return items[index];
+        }
+
+        return null;
     }
 
-    public void displayInventory() {
+    // Clears all inventory from memory.
+    public void clearInventory() {
+
+        for (int x = 0; x < itemCount; x++) {
+            items[x] = null;
+        }
+
+        itemCount = 0;
+    }
+
+    // Creates formatted inventory information for the GUI.
+    public String getInventoryText() {
+
+        StringBuilder output = new StringBuilder();
+
+        output.append("COMPUTER REPAIR SHOP INVENTORY\n");
+        output.append("============================================\n\n");
+
+        if (itemCount == 0) {
+            output.append("There are currently no inventory items.\n");
+            return output.toString();
+        }
 
         for (int x = 0; x < itemCount; x++) {
 
-            System.out.println(
-                    "Item ID: " + items[x].getItemID());
+            output.append(items[x].toString());
+            output.append("\n");
 
-            System.out.println(
-                    "Part Name: " + items[x].getPartName());
+            output.append("Inventory Value: $");
+            output.append(
+                    String.format("%.2f",
+                            items[x].getInventoryValue()));
 
-            System.out.println(
-                    "Category: " + items[x].getCategory());
-
-            System.out.println(
-                    "Quantity: " + items[x].getQuantity());
-
-            System.out.println(
-                    "Price: $" + items[x].getPrice());
-
-            System.out.println(
-                    "Reorder Level: " +
-                            items[x].getReorderLevel());
-
-            System.out.println(
-                    "Inventory Value: $" +
-                            items[x].getInventoryValue());
+            output.append("\n");
 
             if (items[x].isLowStock()) {
-                System.out.println("LOW STOCK");
+                output.append("*** LOW STOCK - REORDER NEEDED ***\n");
             }
 
-            System.out.println();
+            output.append("\n");
         }
 
-        System.out.println(
-                "Total Inventory Value: $" +
-                        getTotalInventoryValue());
+        output.append("--------------------------------------------\n");
+
+        output.append("Number of Items: ");
+        output.append(itemCount);
+        output.append("\n");
+
+        output.append("Total Inventory Value: $");
+        output.append(
+                String.format("%.2f",
+                        getTotalInventoryValue()));
+
+        output.append("\n");
+
+        return output.toString();
     }
 
-    public boolean saveInventoryToFile() {
+    // Saves all inventory items to inventory.txt.
+    public void saveInventoryToFile() throws IOException {
 
-        try {
+        Path file = Paths.get(FILE_NAME);
 
-            BufferedWriter writer = Files.newBufferedWriter(inventoryFile);
+        BufferedWriter writer = Files.newBufferedWriter(file);
 
-            for (int x = 0; x < itemCount; x++) {
+        for (int x = 0; x < itemCount; x++) {
 
-                InventoryItem item = items[x];
+            InventoryItem item = items[x];
+
+            // ComputerPart objects contain two extra fields.
+            if (item instanceof ComputerPart) {
+
+                ComputerPart part = (ComputerPart) item;
 
                 writer.write(
-                        item.getItemID() + "," +
-                                item.getPartName() + "," +
-                                item.getCategory() + "," +
-                                item.getQuantity() + "," +
-                                item.getPrice() + "," +
-                                item.getReorderLevel());
+                        "PART,"
+                                + part.getItemID() + ","
+                                + part.getPartName() + ","
+                                + part.getCategory() + ","
+                                + part.getQuantity() + ","
+                                + part.getPrice() + ","
+                                + part.getReorderLevel() + ","
+                                + part.getBrand() + ","
+                                + part.getWarrantyMonths());
 
-                writer.newLine();
+            } else {
+
+                writer.write(
+                        "ITEM,"
+                                + item.getItemID() + ","
+                                + item.getPartName() + ","
+                                + item.getCategory() + ","
+                                + item.getQuantity() + ","
+                                + item.getPrice() + ","
+                                + item.getReorderLevel());
             }
 
-            writer.close();
-
-            System.out.println(
-                    "Inventory saved successfully.");
-
-            System.out.println(
-                    "Inventory file location: " +
-                            inventoryFile.toAbsolutePath());
-
-            return true;
-
-        } catch (IOException e) {
-
-            System.out.println(
-                    "Error saving inventory file.");
-
-            return false;
+            writer.newLine();
         }
+
+        writer.close();
     }
 
-    public boolean loadInventoryFromFile() {
+    // Loads inventory information from inventory.txt.
+    public void loadInventoryFromFile() throws IOException {
 
-        // Shows exactly where Java is looking
-        System.out.println(
-                "Looking for inventory file at: " +
-                        inventoryFile.toAbsolutePath());
+        Path file = Paths.get(FILE_NAME);
 
-        if (!Files.exists(inventoryFile)) {
-
-            System.out.println(
+        if (!Files.exists(file)) {
+            throw new IOException(
                     "inventory.txt could not be found.");
-
-            return false;
         }
 
-        try {
+        clearInventory();
 
-            BufferedReader reader = Files.newBufferedReader(inventoryFile);
+        BufferedReader reader = Files.newBufferedReader(file);
 
-            itemCount = 0;
+        String line;
+        int lineNumber = 0;
 
-            String line;
+        while ((line = reader.readLine()) != null) {
 
-            while ((line = reader.readLine()) != null) {
+            lineNumber++;
 
-                // Skip blank lines
-                if (line.trim().isEmpty()) {
-                    continue;
-                }
-
-                String[] data = line.split(",");
-
-                if (data.length != 6) {
-                    System.out.println(
-                            "Invalid inventory line: " + line);
-
-                    continue;
-                }
-
-                int id = Integer.parseInt(
-                        data[0].trim());
-
-                String partName = data[1].trim();
-
-                String category = data[2].trim();
-
-                int quantity = Integer.parseInt(
-                        data[3].trim());
-
-                double price = Double.parseDouble(
-                        data[4].trim());
-
-                int reorderLevel = Integer.parseInt(
-                        data[5].trim());
-
-                InventoryItem item = new InventoryItem(
-                        id,
-                        partName,
-                        category,
-                        quantity,
-                        price,
-                        reorderLevel);
-
-                addItem(item);
+            if (line.trim().isEmpty()) {
+                continue;
             }
 
-            reader.close();
+            String[] data = line.split(",");
 
-            System.out.println(
-                    "Inventory loaded successfully.");
+            try {
 
-            return true;
+                /*
+                 * New ComputerPart format:
+                 * PART,id,name,category,qty,price,reorder,brand,warranty
+                 */
+                if (data[0].equals("PART")
+                        && data.length >= 9) {
 
-        } catch (IOException e) {
+                    int id = Integer.parseInt(data[1]);
 
-            System.out.println(
-                    "Error reading inventory file.");
+                    String name = data[2];
 
-            return false;
+                    String category = data[3];
 
-        } catch (NumberFormatException e) {
+                    int quantity = Integer.parseInt(data[4]);
 
-            System.out.println(
-                    "Invalid number found in inventory file.");
+                    double price = Double.parseDouble(data[5]);
 
-            return false;
+                    int reorder = Integer.parseInt(data[6]);
+
+                    String brand = data[7];
+
+                    int warranty = Integer.parseInt(data[8]);
+
+                    ComputerPart part = new ComputerPart(
+                            id,
+                            name,
+                            category,
+                            quantity,
+                            price,
+                            reorder,
+                            brand,
+                            warranty);
+
+                    if (!addItem(part)) {
+                        throw new IOException(
+                                "Could not add item on line "
+                                        + lineNumber + ".");
+                    }
+
+                    /*
+                     * Standard InventoryItem format:
+                     * ITEM,id,name,category,qty,price,reorder
+                     */
+                } else if (data[0].equals("ITEM")
+                        && data.length >= 7) {
+
+                    int id = Integer.parseInt(data[1]);
+
+                    String name = data[2];
+
+                    String category = data[3];
+
+                    int quantity = Integer.parseInt(data[4]);
+
+                    double price = Double.parseDouble(data[5]);
+
+                    int reorder = Integer.parseInt(data[6]);
+
+                    InventoryItem item = new InventoryItem(
+                            id,
+                            name,
+                            category,
+                            quantity,
+                            price,
+                            reorder);
+
+                    if (!addItem(item)) {
+                        throw new IOException(
+                                "Could not add item on line "
+                                        + lineNumber + ".");
+                    }
+
+                    /*
+                     * This section supports the older six-field
+                     * inventory.txt format used earlier in the project.
+                     */
+                } else if (data.length == 6) {
+
+                    int id = Integer.parseInt(data[0]);
+
+                    String name = data[1];
+
+                    String category = data[2];
+
+                    int quantity = Integer.parseInt(data[3]);
+
+                    double price = Double.parseDouble(data[4]);
+
+                    int reorder = Integer.parseInt(data[5]);
+
+                    InventoryItem item = new InventoryItem(
+                            id,
+                            name,
+                            category,
+                            quantity,
+                            price,
+                            reorder);
+
+                    addItem(item);
+
+                } else {
+
+                    throw new IOException(
+                            "Invalid inventory data on line "
+                                    + lineNumber + ".");
+                }
+
+            } catch (NumberFormatException e) {
+
+                reader.close();
+
+                throw new IOException(
+                        "Invalid number on line "
+                                + lineNumber + ".",
+                        e);
+            }
         }
+
+        reader.close();
     }
 }
