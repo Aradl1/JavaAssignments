@@ -1,85 +1,95 @@
 /*Austin Radloff
- *
- * This class stores the basic information for one inventory item.
- * It contains fields, a constructor, getters, setters, calculations,
- * and a method for checking whether an item is low in stock.
+ * Stores the information for one inventory item.
+ * Chapter 3: constructors, private instance fields, getters, setters and methods.
+ * Chapter 4: constructor overloading, this, a static field and constants.
  */
-
 public class InventoryItem {
+    public static final int DEFAULT_REORDER_LEVEL = 5;
+    private static int itemsCreated = 0;
 
-    private int itemID;
+    private String itemID;
     private String partName;
     private String category;
     private int quantity;
     private double price;
     private int reorderLevel;
 
-    // Constructor used to create an inventory item.
-    public InventoryItem(int id, String name, String cat,
-            int qty, double itemPrice, int reorder) {
-
-        itemID = id;
-        partName = name;
-        category = cat;
-        quantity = qty;
-        price = itemPrice;
-        reorderLevel = reorder;
+    // Constructor with all the information for an item.
+    public InventoryItem(String itemID, String partName, String category,
+                         int quantity, double price, int reorderLevel) {
+        this.itemID = requireText(itemID, "Item ID");
+        this.partName = requireText(partName, "Part name");
+        this.category = requireText(category, "Category");
+        setQuantity(quantity);
+        setPrice(price);
+        setReorderLevel(reorderLevel);
+        itemsCreated++;
     }
 
-    public int getItemID() {
-        return itemID;
+    // Overloaded constructor: supplies a default reorder level.
+    public InventoryItem(String itemID, String partName, String category,
+                         int quantity, double price) {
+        this(itemID, partName, category, quantity, price, DEFAULT_REORDER_LEVEL);
     }
 
-    public String getPartName() {
-        return partName;
+    private String requireText(String value, String label) {
+        if (value == null || value.trim().length() == 0) {
+            throw new IllegalArgumentException(label + " cannot be blank.");
+        }
+        if (value.contains(",") || value.contains("\n") || value.contains("\r")) {
+            throw new IllegalArgumentException(label + " cannot contain commas or new lines.");
+        }
+        return value.trim();
     }
 
-    public String getCategory() {
-        return category;
+    public String getItemID() { return itemID; }
+    public String getPartName() { return partName; }
+    public String getCategory() { return category; }
+    public int getQuantity() { return quantity; }
+    public double getPrice() { return price; }
+    public int getReorderLevel() { return reorderLevel; }
+    public static int getItemsCreated() { return itemsCreated; }
+
+    public void setPartName(String partName) {
+        this.partName = requireText(partName, "Part name");
     }
 
-    public int getQuantity() {
-        return quantity;
+    public void setCategory(String category) {
+        this.category = requireText(category, "Category");
     }
 
-    public double getPrice() {
-        return price;
+    public void setQuantity(int quantity) {
+        if (quantity < 0) {
+            throw new IllegalArgumentException("Quantity cannot be negative.");
+        }
+        this.quantity = quantity;
     }
 
-    public int getReorderLevel() {
-        return reorderLevel;
+    public void setPrice(double price) {
+        if (!Double.isFinite(price) || price < 0) {
+            throw new IllegalArgumentException("Price must be a valid, nonnegative number.");
+        }
+        this.price = price;
     }
 
-    public void setQuantity(int qty) {
-        quantity = qty;
+    public void setReorderLevel(int reorderLevel) {
+        if (reorderLevel < 0) {
+            throw new IllegalArgumentException("Reorder level cannot be negative.");
+        }
+        this.reorderLevel = reorderLevel;
     }
 
-    public void setPrice(double itemPrice) {
-        price = itemPrice;
-    }
-
-    // Calculates the total value of this inventory item.
     public double getInventoryValue() {
         return quantity * price;
     }
 
-    // Returns true when the quantity reaches the reorder level.
     public boolean isLowStock() {
-        if (quantity <= reorderLevel) {
-            return true;
-        } else {
-            return false;
-        }
+        return quantity <= reorderLevel;
     }
 
-    // Overrides the Object toString() method.
     @Override
     public String toString() {
-        return "ID: " + itemID
-                + " | Part: " + partName
-                + " | Category: " + category
-                + " | Qty: " + quantity
-                + " | Price: $" + String.format("%.2f", price)
-                + " | Reorder Level: " + reorderLevel;
+        return partName + " (ID: " + itemID + ", Qty: " + quantity +
+               ", Price: $" + String.format("%.2f", price) + ")";
     }
 }
