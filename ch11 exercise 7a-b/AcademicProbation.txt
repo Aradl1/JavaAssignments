@@ -1,0 +1,2 @@
+2,Sam,Samuelson,1.75
+3,Emily,Wilson,1.5
